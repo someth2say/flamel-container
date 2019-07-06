@@ -16,4 +16,4 @@ RUN dnf -y install /tmp/*rpm \
 VOLUME ${BOOK}
 
 WORKDIR ${BOOK}
-CMD flamel clean ; flamel sg
+CMD flamel sg
