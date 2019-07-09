@@ -12,5 +12,7 @@ Copy the script to a folder in your path, such as ~/bin, and run the script from
 
 Yes, the flamel.sh script is very hacky, I need to find a better way to manage SELinux labels and the ./tmp folder. And learn how to do rootless podman, which I wasn't able to do yet in my RHEL 7.6 CSB. :-(
 
+I tested the wrapper script and container image on RHEL 8 CSB and not configured for rootless podman. If you wish to try rootless, just change a variable in the beginning of the script and tell me your results. Caveat: I did not test generting slides.
+
 Please ask any questions to Fernando Lozano <flozano@redhat.com> or on the #curriculum-core room on Google Chat.
 
