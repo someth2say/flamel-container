@@ -53,10 +53,10 @@ echo "Adding SELinux label to book files..."
 chcon -Rt svirt_sandbox_file_t ${book}
 
 #XXX Another hack, flamel sg inside the container cannot clean these files
-rm -rf ./guides/tmp
+#rm -rf ./guides/tmp
 
 echo "Running containerized flamel with arguments '$@'..."
-podman run --name ${container} -q -rm -v ${book}:/tmp/coursebook ${image} "$@"
+podman run --name ${container} -q -rm -v ${book}:/tmp/coursebook:z ${image} "$@"
 
 # Do not leave root files hanging around
 if [ "$(id -u)" = "0" ] && [ -d ./guides/tmp ]
