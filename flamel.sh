@@ -62,6 +62,5 @@ podman run --name ${container} -q -rm -v ${book}:/tmp/coursebook ${image} "$@"
 if [ "$(id -u)" = "0" ] && [ -d ./guides/tmp ]
 then
   echo "Changing owner of tmp files to $(id -un ${SAVED_UID}):$(id -gn ${SAVED_GID})..."
-  chown ${SAVED_UID}:${SAVED_GID} ./guides/tmp
+  chown -R ${SAVED_UID}:${SAVED_GID} ./guides/tmp
 fi
-
