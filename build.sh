@@ -1,7 +1,8 @@
 #!/bin/bash
 
-sudo podman build -t flamel .
+#podman build -t flamel .
+podman build --no-cache -t flamel .
 
 # After building:
-#sudo skopeo copy containers-storage:localhost/flamel:latest docker://quay.io/flozanorht/flamel:0.1
+# skopeo copy containers-storage:localhost/flamel:latest docker://quay.io/flozanorht/flamel:0.2
 
