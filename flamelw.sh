@@ -26,8 +26,10 @@ fi
 
 if [ "$1" = "--check" ]
 then
-    podman run --name ${container} -q -rm --entrypoint /tmp/check-gls-packages.sh ${image} 
-    exit $?
+    docker run --name ${container} --entrypoint /tmp/check-gls-packages.sh ${image} 
+    status=$?
+    docker rm -f ${container} &>/dev/null
+    exit "${status}"
 fi
 
 # Need to expose the project root to the container, not just the guides folder, to be able to fetch the git commit id
