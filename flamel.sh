@@ -3,7 +3,7 @@
 # This script was tested under RHEL8 CSB. You may require changes for other distros.
 
 #image=localhost/flamel
-image=quay.io/flozanorht/flamel:0.2
+image=quay.io/flozanorht/flamel:0.3
 container=flamel
 rootless=true
 
@@ -42,6 +42,15 @@ then
   fi
 fi
 
+
+# Override ENTRYPOINT to not run flamel and run instead the check for package updates
+
+if [ "$1" = "--check" ]
+then
+    podman run --name ${container} -q -rm --entrypoint /tmp/check-gls-packages.sh ${image} 
+    exit $?
+fi
+
 # Need to expose the project root to the container, not just the guides folder, to be able to fetch the git commit id
 
 book=$(pwd)
@@ -56,6 +65,7 @@ chcon -Rt svirt_sandbox_file_t ${book}
 
 echo "Running containerized flamel with arguments '$@'..."
 podman run --name ${container} -q -rm -v ${book}:/tmp/coursebook:z ${image} "$@"
+status=$?
 
 # non-rootless; Do not leave root files hanging around
 
@@ -65,3 +75,4 @@ then
   chown -R ${SAVED_UID}:${SAVED_GID} ./guides/tmp
 fi
 
+exit "${status}"

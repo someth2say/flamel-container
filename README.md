@@ -1,4 +1,12 @@
-# Containerized Flamel for Red Hat Training Books and Slides
+# Containerized Flamel for Building Red Hat Training Books and Slides
+
+### 2019-08-15 UPDATE
+
+Prebuilt image tag 0.3 replaces env vars that provide the versions for flamel and other packages with ARG. Now the same Dockerfile can built from latest packages on the curricum Yum repo, or with specific versions (for regression tests, for example).
+
+The wrapper script now recognizes the --check option, that instead of running flamel, runs a script that reports package versions inside the container. If you are connected to the VPN, it also compares the versions of the local packages with the latest on the curriculum repo. This way you can verify that your books are using the latest brading package.
+
+Razique reports that the flamelw.sh script works unchanged on MacOS with Hyperkit. Just copy it to yours ~/bin/flamel and he happy!
 
 ### 2019-07-30 UPDATE
 

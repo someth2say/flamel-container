@@ -2,9 +2,10 @@
 
 # Wrapper script for Windows, under Docker Toolbox v18.09.3
 # Tested on Windows Home 10, updated as of July 15
+# Reported by Razique to work unchanged on MacOS with Hyperkit
 
 #image=localhost/flamel
-image=quay.io/flozanorht/flamel:0.2
+image=quay.io/flozanorht/flamel:0.3
 container=testflamel
 
 export LANG=en_US.utf-8
@@ -21,6 +22,14 @@ then
   fi
 fi
 
+# Override ENTRYPOINT to not run flamel and run instead the check for package updates
+
+if [ "$1" = "--check" ]
+then
+    podman run --name ${container} -q -rm --entrypoint /tmp/check-gls-packages.sh ${image} 
+    exit $?
+fi
+
 # Need to expose the project root to the container, not just the guides folder, to be able to fetch the git commit id
 
 book=$(pwd)
@@ -33,5 +42,6 @@ fi
 
 echo "Running containerized flamel with arguments '$@'..."
 docker run --name ${container} -v ${book}:/tmp/coursebook ${image} "$@"
+status=$?
 docker rm -f ${container} &>/dev/null
-
+exit "${status}"
