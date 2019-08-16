@@ -40,6 +40,8 @@ The Dockerfile was verified against Steve's playboks at https://github.com/RedHa
 
 Copy the script to a folder in your path, such as ~/bin, and run the script from your guides folder, just like you would do with an RPM-based installation of flamel. Optionally rename the script from 'flamel.sh' to just 'flamel' so it works as a true drop-in replacement, including being used by pre-commit.
 
+If you think the container image cached into your system contains outdated curriculum packages, connect to the VPN and run the script with the --check option. It will check the latest packages on the curriculum repo and compare with the versions of the same packages inside the container. If you have no access to the VPN, the --check option just prints the versions of the packages inside the container.
+
 The script uses podman as the current user (rootless), for the benefit of RHEL 8 users. RHEL 7 users need sudo, just change a variable in the beginning of the script. Generating slides also works. Rootless should work with either RHEL 8+ and Fedora 30+.
 
 If your distro is not RHEL, CentOS, nor Fedora, but provides podman, it should work too, at least using sudo (rootless=false). You can also try to adapt the flamel.sh script to use docker community and your distro security settings (I hope you won't just disable SElinux).
