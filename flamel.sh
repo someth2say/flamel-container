@@ -47,7 +47,7 @@ fi
 
 if [ "$1" = "--check" ]
 then
-    podman run --name ${container} -q -rm --entrypoint /tmp/check-gls-packages.sh ${image} 
+    podman run --name ${container} -q --rm --entrypoint /tmp/check-gls-packages.sh ${image} 
     exit $?
 fi
 
@@ -64,7 +64,7 @@ echo "Adding SELinux label to book files..."
 chcon -Rt svirt_sandbox_file_t ${book}
 
 echo "Running containerized flamel with arguments '$@'..."
-podman run --name ${container} -q -rm -v ${book}:/tmp/coursebook:z ${image} "$@"
+podman run --name ${container} -q --rm -v ${book}:/tmp/coursebook:z ${image} "$@"
 status=$?
 
 # non-rootless; Do not leave root files hanging around
