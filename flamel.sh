@@ -7,6 +7,23 @@ image=quay.io/flozanorht/flamel:0.3
 container=flamel
 rootless=true
 
+if podman &> /dev/null;
+then
+  echo "Using PODMAN as container runtime"
+  runtime=podman
+  runtine_run_params="-q --rm"
+elif docker &> /dev/null; 
+then
+  echo "Using DOCKER as container runtime"
+  runtime=docker
+  runtine_run_params="--rm"
+else 
+  echo "No container runtime found"
+  exit -1
+fi
+
+#runtime=${runtime}
+runtime=docker
 # Rootless tested under RHEL 8.0 CSB but should work on any RHEL 8+ and Fedora 30+.
 # Hint: there should be no need to configure uid and gid maps anymore.
 
@@ -30,10 +47,10 @@ fi
 
 export LANG=en_US.utf-8
 
-if ! podman inspect --type image --format '{{.Id}}' ${image} &>/dev/null
+if ! ${runtime} inspect --type image --format '{{.Id}}' ${image} &>/dev/null
 then
   echo -n "Downloading container image ${image}..."
-  if podman pull ${image} &>/dev/null
+  if ${runtime} pull ${image} &>/dev/null
   then
     echo "Done."   
   else
@@ -42,12 +59,10 @@ then
   fi
 fi
 
-
 # Override ENTRYPOINT to not run flamel and run instead the check for package updates
-
 if [ "$1" = "--check" ]
 then
-    podman run --name ${container} -q --rm --entrypoint /tmp/check-gls-packages.sh ${image} 
+    ${runtime} run --name ${container} ${runtine_run_params} --entrypoint /tmp/check-gls-packages.sh ${image} 
     exit $?
 fi
 
@@ -61,10 +76,10 @@ then
 fi
 
 echo "Adding SELinux label to book files..."
-chcon -Rt svirt_sandbox_file_t ${book}
+chcon -Rt svirt_sandbox_file_t ${book} &> /dev/null
 
 echo "Running containerized flamel with arguments '$@'..."
-podman run --name ${container} -q --rm -v ${book}:/tmp/coursebook:z ${image} "$@"
+${runtime} run --name ${container} ${runtine_run_params} -v ${book}:/tmp/coursebook:z ${image} "$@"
 status=$?
 
 # non-rootless; Do not leave root files hanging around
