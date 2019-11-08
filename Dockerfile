@@ -18,9 +18,9 @@ ENV LANG="en_US.utf-8" \
 COPY http://wiki.gls.redhat.com/curriculum-repos/fedora/30/x86_64/curriculum-release-fedora${CURRICULUM}.fc30.noarch.rpm /tmp
 
 RUN dnf -y install /tmp/*rpm \
-  && dnf --nodocs -y install \
+  && dnf --nodocs --setopt=install_weak_deps=False -y install \
     publican-gls-redhat-new redhat-training-xsl${BRANDING} reveal-js-slide-generator${SLIDES} \
-    interstate-fonts overpass-fonts flamel${FLAMEL} git \
+    interstate-fonts overpass-fonts flamel${FLAMEL} git-core \
   && dnf clean all \
   && mkdir -p ${BOOK}
 

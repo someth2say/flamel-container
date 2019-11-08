@@ -5,7 +5,7 @@
 # Reported by Razique to work unchanged on MacOS with Hyperkit
 
 #image=localhost/flamel
-image=quay.io/flozanorht/flamel:0.3
+image=quay.io/flozanorht/flamel:0.3-4
 container=testflamel
 
 export LANG=en_US.utf-8

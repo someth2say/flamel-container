@@ -3,7 +3,7 @@
 # This script was tested under RHEL8 CSB. You may require changes for other distros.
 
 #image=localhost/flamel
-image=quay.io/flozanorht/flamel:0.3
+image=quay.io/flozanorht/flamel:0.4
 container=flamel
 rootless=true
 
