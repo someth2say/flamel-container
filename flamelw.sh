@@ -4,6 +4,8 @@
 # Tested on Windows Home 10, updated as of July 15
 # Reported by Razique to work unchanged on MacOS with Hyperkit
 
+# This wrapper script is currently outdated compared to flamel.sh, not implementing all command-line options
+
 #image=localhost/flamel
 image=quay.io/flozanorht/flamel:0.3-4
 container=testflamel

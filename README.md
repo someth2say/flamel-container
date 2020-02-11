@@ -1,5 +1,15 @@
 # Containerized Flamel for Building Red Hat Training Books and Slides
 
+### 2020-02-11 UPDATE
+
+Prebuilt image tag 0.3 (and 0.3-5) updated with flamel 2.1.19-1, redhat-training-xsl 1.1.18-1, and 1.2.3-1.
+
+The wrapper script now recognizes the --tag and --purge options. The first one allows overriding the image tag and can be conbined with other options and arguments. The second one removes local container images, so the next run can download an updated container image.
+
+These updates were not applyed yet to the flamelw.sh wrapper script.
+
+Building an IG is known to work for quite some time. Just remember to run 'flamel clean' before running 'flamel ig'. IG still uses the old branding but this is not a failure of the container.
+
 ### 2019-08-15 UPDATE
 
 Prebuilt image tag 0.3 replaces env vars that provide the versions for flamel and other packages with ARG. Now the same Dockerfile can built from latest packages on the curricum Yum repo, or with specific versions (for regression tests, for example).
@@ -49,8 +59,6 @@ If your distro is not RHEL, CentOS, nor Fedora, but provides podman, it should w
 Please ask any questions to Fernando Lozano <flozano@redhat.com> or on the #curriculum-core room on Google Chat.
 
 ## PENDING
-
-Tests using instructor guide.
 
 CI/CD updates of the container image with new flamel, branding, or slides packages, maybe using Quay.io build support.
 

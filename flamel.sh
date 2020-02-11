@@ -2,10 +2,29 @@
 
 # This script was tested under RHEL8 CSB. You may require changes for other distros.
 
+tag=latest
 #image=localhost/flamel
-image=quay.io/flozanorht/flamel:0.4
+image=quay.io/flozanorht/flamel
 container=flamel
 rootless=true
+
+# Usage nessage
+
+if [ "$1" = "--help" -o "$1" = "-h" ]
+then
+  echo "Wrapper script to run the containerized flamel."
+  echo
+  echo "Usage: $0 {options|target}"
+  echo
+  echo -e "\t 'target' is a target to flamel such as 'sg', 'ig', 'slides', and 'clean'"
+  echo -e "\t 'options' can be:"
+  echo -e "\t --tag arg to use tag 'arg' instead of 'latest' for the container image."
+  echo -e "\t --check to check if the main packages inside the container image, such as redhat-training-xsl, are on their latest releases."
+  echo -e "\t --purge to remove local container images, allowing pulling of an updated image."
+  echo
+  echo "The beggining of this script also defines a few variables that you may change as your local configuration."
+  exit
+fi
 
 # Rootless tested under RHEL 8.0 CSB but should work on any RHEL 8+ and Fedora 30+.
 # Hint: there should be no need to configure uid and gid maps anymore.
@@ -30,10 +49,40 @@ fi
 
 export LANG=en_US.utf-8
 
-if ! podman inspect --type image --format '{{.Id}}' ${image} &>/dev/null
+# Allow overriding the image tag
+
+if [ "$1" = "--tag" ]
 then
-  echo -n "Downloading container image ${image}..."
-  if podman pull ${image} &>/dev/null
+  if [ "$2" = "" ]
+  then
+    echo "Missing tag argument" 1>&2
+    exit 127
+  fi
+  tag="$2"
+  shift ; shift
+fi
+
+# Remove local container image (to later pull an updated image)
+
+if [ "$1" = "--purge" ]
+then
+  echo -n "Removing local container image ${image}:${tag}..."
+  if podman rmi --force ${image}:${tag} 
+  then
+    echo "Done."
+    exit
+  else
+    echo "Failed!" 1>&2
+    exit 127
+  fi
+fi
+
+# Pull the container image if not available locally
+
+if ! podman inspect --type image --format '{{.Id}}' ${image}:${tag} &>/dev/null
+then
+  echo -n "Downloading container image ${image}:${tag}..."
+  if podman pull ${image}:${tag} &>/dev/null
   then
     echo "Done."   
   else
@@ -47,7 +96,7 @@ fi
 
 if [ "$1" = "--check" ]
 then
-    podman run --name ${container} -q --rm --entrypoint /tmp/check-gls-packages.sh ${image} 
+    podman run --name ${container} -q --rm --entrypoint /tmp/check-gls-packages.sh ${image}:${tag} 
     exit $?
 fi
 
@@ -64,7 +113,7 @@ echo "Adding SELinux label to book files..."
 chcon -Rt svirt_sandbox_file_t ${book}
 
 echo "Running containerized flamel with arguments '$@'..."
-podman run --name ${container} -q --rm -v ${book}:/tmp/coursebook:z ${image} "$@"
+podman run --name ${container} -q --rm -v ${book}:/tmp/coursebook:z ${image}:${tag} "$@"
 status=$?
 
 # non-rootless; Do not leave root files hanging around
