@@ -37,7 +37,7 @@ fi
 
 count=0
 echo
-for package in flamel redhat-training-xsl reveal-js-slide-generator
+for package in flamel redhat-training-xsl publican-gls-redhat-new reveal-js-slide-generator
 do
     echo -n " · Checking the '${package}' package: "
     if ! rpm -q "${package}" &>/dev/null

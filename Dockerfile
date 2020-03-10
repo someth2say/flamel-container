@@ -7,6 +7,7 @@ MAINTAINER Fernando Lozano <flozano@redhat.com>
 
 ARG CURRICULUM="-22-1"
 ARG BRANDING
+ARG BRANDINGIG
 ARG FLAMEL
 ARG SLIDES
 
@@ -19,7 +20,7 @@ COPY http://wiki.gls.redhat.com/curriculum-repos/fedora/30/x86_64/curriculum-rel
 
 RUN dnf -y install /tmp/*rpm \
   && dnf --nodocs --setopt=install_weak_deps=False -y install \
-    publican-gls-redhat-new redhat-training-xsl${BRANDING} reveal-js-slide-generator${SLIDES} \
+    publican-gls-redhat-new${BRANDINGIG} redhat-training-xsl${BRANDING} reveal-js-slide-generator${SLIDES} \
     interstate-fonts overpass-fonts flamel${FLAMEL} git-core \
   && dnf clean all \
   && mkdir -p ${BOOK}
