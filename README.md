@@ -1,5 +1,11 @@
 # Containerized Flamel for Building Red Hat Training Books and Slides
 
+### 2020-03-17 UPDATE
+
+Updated the --check option to check the IG branding package also.
+
+Added a CAVEATS heading to this README file.
+
 ### 2020-02-11 UPDATE
 
 Prebuilt image tag 0.3 (and 0.3-5) updated with flamel 2.1.19-1, redhat-training-xsl 1.1.18-1, and 1.2.3-1.
@@ -58,7 +64,22 @@ If your distro is not RHEL, CentOS, nor Fedora, but provides podman, it should w
 
 Please ask any questions to Fernando Lozano <flozano@redhat.com> or on the #curriculum-core room on Google Chat.
 
+## Caveats
+
+If you environment sets a local DNS server, for example for Minishift, CDK, and Code Ready Containers, your resolv.conf may be invalid for a container, for example because it sets 127.0.0.1 as the DNS server. If this is your scenario, you need to customize the flamel.sh wrapper script to add a proper DNS configuration using the --dns and --dns-search options from podman, for example:
+
+
+```
+# Override ENTRYPOINT to not run flamel and run instead the check for package updates
+
+if [ "$1" = "--check" ]
+then
+    podman run --dns-search redhat.com --dns 10.11.5.19 --dns 10.5.30.160 --name ${container} -q --rm --entrypoint /tmp/check-gls-packages.sh ${image}:${tag}
+    exit $?
+fi
+```
+
 ## PENDING
 
-CI/CD updates of the container image with new flamel, branding, or slides packages, maybe using Quay.io build support.
+CI/CD updates of the container image with new flamel, branding, or slides packages, ~~maybe using Quay.io build support~~. Building the container requires access to the Red Hat VPN to access the GLS package repos. Maybe the Open Platform (https://mojo.redhat.com/docs/DOC-1099943) fits the bill?
 
