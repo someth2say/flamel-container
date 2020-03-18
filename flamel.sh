@@ -8,6 +8,9 @@ image=quay.io/flozanorht/flamel
 container=flamel
 rootless=true
 
+# DNS options for Red Hat VPN using RDU2
+#DNSOPTS="--dns-search redhat.com --dns 10.11.5.19 --dns 10.5.30.160"
+
 # Usage nessage
 
 if [ "$1" = "--help" -o "$1" = "-h" ]
@@ -96,7 +99,7 @@ fi
 
 if [ "$1" = "--check" ]
 then
-    podman run --name ${container} -q --rm --entrypoint /tmp/check-gls-packages.sh ${image}:${tag} 
+    podman run ${DNSOPTS} --name ${container} -q --rm --entrypoint /tmp/check-gls-packages.sh ${image}:${tag} 
     exit $?
 fi
 
