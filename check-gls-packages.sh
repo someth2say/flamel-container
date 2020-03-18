@@ -6,15 +6,17 @@ echo "This script checks that your container is updated accoding to the latest r
 
 function error {
     echo -en "\e[1m\e[31m" 1>&2
-    echo "$*" 1>&2
+    echo -n "$*" 1>&2
     echo -en "\e[0m" 1>&2
+    echo 1>&2
 }
 
 
 function ok {
     echo -en "\e[1m\e[32m"
-    echo "$*"
+    echo -n "$*"
     echo -en "\e[0m"
+    echo
 }
 
 
