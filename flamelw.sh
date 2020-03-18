@@ -6,8 +6,8 @@
 
 # This wrapper script is currently outdated compared to flamel.sh, not implementing all command-line options
 
-#image=localhost/flamel
-image=quay.io/flozanorht/flamel:0.3-4
+tag=latest
+image=quay.io/flozanorht/flamel:$tag
 container=testflamel
 
 export LANG=en_US.utf-8
